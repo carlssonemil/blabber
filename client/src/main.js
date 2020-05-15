@@ -9,7 +9,7 @@ import EvaIcons from 'vue-eva-icons'
 import VueJsDialog from 'vuejs-dialog'
 import VueTippy, { TippyComponent } from 'vue-tippy'
 
-Vue.use(VueSocketIOExt, SocketIO(`https://blabber-application.herokuapp.com:${ process.env.PORT || 80 }`));
+Vue.use(VueSocketIOExt, SocketIO('/'));
 Vue.use(EvaIcons);
 Vue.use(VueJsDialog);
 Vue.use(VueTippy, {
