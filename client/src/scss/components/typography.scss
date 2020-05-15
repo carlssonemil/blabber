@@ -1,0 +1,29 @@
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.4;
+  white-space: pre-line;
+
+  &.sub {
+    font-size: 14px;
+    opacity: .75;
+  }
+}
+
+b {
+  font-weight: 600;
+}

@@ -1,0 +1,36 @@
+input {
+  background: #f0eeea;
+  border: none;
+  border-radius: 50px;
+  display: block;
+  font-family: Inter;
+  font-size: 14px;
+  padding: 15px 20px;
+  transition: 0.25s ease;
+  width: 100%;
+
+  &:focus {
+    box-shadow: 0 0 0 2px darken(#f0eeea, 5%);
+  }
+
+  &:disabled {
+    opacity: .5;
+  }
+
+  + input {
+    margin-bottom: 50px;
+  }
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 5px 15px;
+  text-align: left;
+
+  &.disabled {
+    opacity: .5;
+    pointer-events: none;
+  }
+}

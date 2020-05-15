@@ -1,0 +1,372 @@
+.dg-zoom-enter-active {
+  -webkit-animation: dg-zoomIn 0.25s cubic-bezier(0, 0, 0.58, 1);
+          animation: dg-zoomIn 0.25s cubic-bezier(0, 0, 0.58, 1);
+}
+
+.dg-zoom-leave-active {
+  -webkit-animation: dg-zoomOut 0.25s cubic-bezier(0, 0, 0.58, 1);
+          animation: dg-zoomOut 0.25s cubic-bezier(0, 0, 0.58, 1);
+}
+
+@-webkit-keyframes dg-zoomIn {
+  0% {
+      opacity: 0;
+      -webkit-transform: scale(0.3);
+      transform: scale(0.3);
+  }
+  50% {
+      opacity: 1;
+  }
+}
+
+@keyframes dg-zoomIn {
+  0% {
+      opacity: 0;
+      -webkit-transform: scale(0.3);
+      transform: scale(0.3);
+  }
+  50% {
+      opacity: 1;
+  }
+}
+
+@-webkit-keyframes dg-zoomOut {
+  0% {
+      opacity: 1;
+  }
+  50% {
+      opacity: 0;
+      -webkit-transform: scale(0.3);
+      transform: scale(0.3);
+  }
+  100% {
+      opacity: 0;
+  }
+}
+
+@keyframes dg-zoomOut {
+  0% {
+      opacity: 1;
+  }
+  50% {
+      opacity: 0;
+      -webkit-transform: scale(0.3);
+      transform: scale(0.3);
+  }
+  100% {
+      opacity: 0;
+  }
+}
+
+.dg-backdrop-enter-active {
+  -webkit-animation: dg-fadeIn .25s;
+          animation: dg-fadeIn .25s;
+}
+.dg-backdrop-leave-active {
+  -webkit-animation: dg-fadeOut .25s;
+          animation: dg-fadeOut .25s;
+}
+
+@-webkit-keyframes dg-fadeIn {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+@keyframes dg-fadeIn {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+@-webkit-keyframes dg-fadeOut {
+  0% {
+      opacity: 1;
+  }
+  100% {
+      opacity: 0;
+  }
+}
+
+@keyframes dg-fadeOut {
+  0% {
+      opacity: 1;
+  }
+  100% {
+      opacity: 0;
+  }
+}
+
+.dg-btn-loader {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  top: 0;
+  left: 0;
+}
+
+.dg-btn-loader .dg-circles {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.dg-btn-loader .dg-circle {
+    width: .9em;
+    height: .9em;
+    opacity: 0;
+    background-color: #09a2e3;
+    display: inline-block;
+    border-radius: 50%;
+    -webkit-animation-name: dg-circle-oscillation;
+            animation-name: dg-circle-oscillation;
+    -webkit-animation-duration: 0.5875s;
+            animation-duration: 0.5875s;
+    -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+    -webkit-animation-direction: normal;
+            animation-direction: normal;
+}
+
+.dg-btn-loader .dg-circle:not(:last-child) {
+      margin-right: 8px;
+}
+
+.dg-btn-loader .dg-circle:nth-child(1) {
+      -webkit-animation-delay: 0.1195s;
+              animation-delay: 0.1195s;
+}
+
+.dg-btn-loader .dg-circle:nth-child(2) {
+      -webkit-animation-delay: 0.2755s;
+              animation-delay: 0.2755s;
+}
+
+.dg-btn-loader .dg-circle:nth-child(3) {
+      -webkit-animation-delay: 0.3485s;
+              animation-delay: 0.3485s;
+}
+
+@-webkit-keyframes dg-circle-oscillation {
+  0% {
+  }
+  50% {
+      opacity: 1;
+  }
+  100% {
+  }
+}
+
+@keyframes dg-circle-oscillation {
+  0% {
+  }
+  50% {
+      opacity: 1;
+  }
+  100% {
+  }
+}
+
+body.dg-open {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.dg-container * {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.dg-backdrop {
+  background-color: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5000;
+}
+
+.dg-container {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5000;
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: .3;
+  }
+
+  .dg-content-cont {
+    width: 100%;
+    font-family: inherit;
+
+    &.dg-content-cont--floating {
+      position: absolute;
+      top: 35%;
+      margin-top: 0;
+    
+      @media all and (max-height: 700px) {
+        position: relative;
+        top: 10%;
+        margin-top: 0;
+      }
+    }
+
+    .dg-main-content {
+      width: 100%;
+      max-width: 450px;
+      padding: 25px;
+      border-radius: 5px;
+      margin: 25px auto;
+      background-color: #ffffff;
+
+      .dg-title {
+        margin: 0 0 10px 0;
+        padding: 0;
+        font-size: 18px;
+      }
+
+      .dg-content-body {
+        padding: 15px 0 20px;
+        
+        .dg-content {
+          font-size: 18px;
+          line-height: 1.3em;
+          text-align: center;
+
+          p {
+            font-size: 14px;
+            margin: 8px 0 0;
+          }
+
+          .copy {
+            position: relative;
+
+            &.success {
+              $color: #10ac84;
+
+              input {
+                background: rgba($color, .15);
+                box-shadow: 0 0 0 2px $color;
+                transition: .5s ease;
+              }
+
+              button {
+                background: $color;
+                border-color: $color;
+              }
+            }
+
+            input {
+              overflow: hidden;
+              padding-right: 85px;
+              text-overflow: ellipsis;
+            }
+
+            button {
+              font-size: 14px;
+              padding: 8px 16px;
+              position: absolute;
+              right: 6px;
+              top: 50%;
+              transform: translateY(-50%);
+              width: 80px;
+            }
+          }
+        }
+      }
+
+      .dg-content-footer {
+        display: flex;
+        justify-content: space-around;
+        position: relative;
+        padding: 15px 0 0;
+
+        .dg-clear {
+          display: none;
+        }
+
+        .dg-btn--cancel {
+          @extend button.secondary;
+        }
+
+        .dg-btn--ok {
+          align-self: flex-end;
+        }
+      }
+    }
+  }
+}
+
+.dg-form {
+  background-color: ghostwhite;
+  padding: 10px;
+  margin-bottom: -15px;
+}
+
+.dg-btn.dg-btn--loading .dg-btn-content {
+  visibility: hidden;
+}
+
+.dg-content-body--has-title .dg-content {
+  font-size: 16px;
+  text-align: left;
+}
+
+.dg-container--has-input .dg-main-content {
+  max-width: 450px;
+}
+
+.dg-container--has-input .dg-content {
+  margin-bottom: 15px;
+}
+
+.dg-container--has-input .dg-content-body {
+  border-bottom: none;
+}
+
+.dg-container--has-input .dg-form {
+  border: 1px solid #E1E6EA;
+  border-bottom: none;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.dg-container--has-input .dg-content-footer {
+  background-color: ghostwhite;
+  border: 1px solid #E1E6EA;
+  border-top: none;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  padding: 0 10px 10px;
+}
+
+.dg-container .dg-highlight-1 {
+  color: #FF8C00;
+  font-weight: bold;
+  border-bottom: 1px solid #2ba5ff;
+}
+
+.dg-container .dg-highlight-2 {
+  color: #2ba5ff;
+  font-weight: bold;
+  border-bottom: 1px solid #FF8C00;
+}
+
