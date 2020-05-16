@@ -1,7 +1,7 @@
 const regExps = {
   image: /\.(jpe?g|gif|png|webp)(?=\?|$)/,
   video: /\.(mp4)(?=\?|$)/,
-  audio: /\.(mp3)(?=\?|$)/
+  audio: /\.(mp3|wav)(?=\?|$)/
 };
 
 async function handleEmbeds(url) {
@@ -37,7 +37,7 @@ async function handleEmbeds(url) {
         content: 
           `<audio
             controls>
-            <source src="${url}" type="audio/mpeg">
+            <source src="${url}">
             Your browser does not support the audio tag.
           </audio>`
       };
