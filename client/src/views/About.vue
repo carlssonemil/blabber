@@ -1,7 +1,7 @@
 <template>
   <div class="about page">
     <h2>About</h2>
-    <p>Blabber is an anonymous real-time chat application made primarily to better my understanding of WebSockets. Built with <a href="https://nodejs.org/en/">Node</a>, <a href="https://expressjs.com/">Express</a>, <a href="https://socket.io/">Socket.io</a> &amp; <a href="https://vuejs.org/">Vue</a>, the entire code base is open source and available on GitHub.</p>
+    <p>Blabber is an anonymous real-time chat application made primarily to better my understanding of WebSockets. Built with <a href="https://nodejs.org/en/">Node</a>, <a href="https://expressjs.com/">Express</a>, <a href="https://socket.io/">Socket.io</a> &amp; <a href="https://vuejs.org/">Vue</a>, the entire code base is open source and available on <a href="https://github.com/carlssonemil/blabber">GitHub</a>.</p>
     
     <h3>How does it work?</h3>
     <p>Enter a username and room of your choosing on the front page, send an invite to your friends and start chatting. Simple as that!</p>
