@@ -23,7 +23,7 @@
           }">
       </div>
 
-      <div v-if="message.message.oembed" 
+      <div v-if="message.message.oembed && message.message.oembed.type !== 'rich'" 
           class="content oembed"
           :data-type="message.message.oembed.type">
         <img v-if="message.message.oembed.type.startsWith('photo') || message.message.oembed.type.startsWith('image')" 
