@@ -86,6 +86,8 @@ import Messages from '@/components/Messages.vue'
 import Loader from '@/components/Loader.vue'
 import axios from 'axios'
 
+const { handleUrls, containsUrls, wrapURLs } = require('@/utils/urls');
+
 export default {
   name: 'Chat',
 
@@ -226,9 +228,9 @@ export default {
     async handleMessage(message) {
       let additionalMessages = [];
 
-      if (this.containsUrls(message.message.content)) {
-        additionalMessages = await this.handleUrls(message.message.content, message);
-        message.message.content = this.wrapURLs(message.message.content);
+      if (containsUrls(message.message.content)) {
+        additionalMessages = await handleUrls(message.message.content, message);
+        message.message.content = wrapURLs(message.message.content);
       }
 
       this.messages.push(message);
@@ -243,116 +245,6 @@ export default {
         const element = document.querySelector('.main');
         element.scrollTop = element.scrollHeight;
       });
-    },
-
-    async handleUrls(text, message) {
-      const urls = this.extractUrls(text);
-      let additionalMessages = [];
-
-      for (let url of urls) {
-        if (url.match(/\.(jpe?g|gif|png|webp)(?=\?|$)/)) {
-          additionalMessages.push({
-            ...message,
-            message: {
-              type: 'image',
-              content: `<img src="${url}" />`
-            }
-          });
-        } else if (url.match(/\.(mp4)(?=\?|$)/)) {
-          additionalMessages.push({
-            ...message,
-            message: {
-              type: 'video',
-              content: 
-                `<iframe
-                  src="${url}"
-                  allowfullscreen
-                  allowtransparency
-                  allow="autoplay"
-                ></iframe>`
-            }
-          });
-        } else if (url.match(/\.(mp3)(?=\?|$)/)) {
-          additionalMessages.push({
-            ...message,
-            message: {
-              type: 'audio',
-              content: 
-                `<audio
-                  controls>
-                  <source src="${url}" type="audio/mpeg">
-                  Your browser does not support the audio tag.
-                </audio>`
-            }
-          });
-        } else if (url.match(/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/)) {
-          const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-          const match = url.match(regExp);
-          const youtubeID = match[2];
-
-          additionalMessages.push({
-            ...message,
-            message: {
-              type: 'video',
-              content: 
-              `<iframe
-                  src="https://www.youtube.com/embed/${youtubeID}"
-                  allowfullscreen
-                  allowtransparency
-                  allow="autoplay"
-                ></iframe>`
-            }
-          });
-        } else if (url.match(/^(https?:\/\/)?(www\.)?(vimeo\.com)\/.+$/)) {
-          await axios.get(`https://vimeo.com/api/oembed.json?url=${url}`)
-            .then(response => {
-              console.log(response);
-              additionalMessages.push({
-                ...message,
-                message: {
-                  type: 'video',
-                  height: response.data.height,
-                  width: response.data.width,
-                  content: 
-                  `<iframe
-                      src="https://player.vimeo.com/video/${response.data.video_id}"
-                      webkitallowfullscreen 
-                      mozallowfullscreen 
-                      allowfullscreen
-                    ></iframe>`
-                }
-              });
-            })
-            .catch(error => {
-              console.error(error);
-            });
-        }
-      }
-      return additionalMessages;
-    },
-
-    containsUrls(text) {
-      const urlRegex = "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?";
-      return new RegExp(urlRegex).test(text);
-    },
-
-    wrapURLs(text, new_window) {
-      var url_pattern = /(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}\-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?/ig;
-      var target = (new_window === true || new_window == null) ? '_blank' : '';
-      
-      return text.replace(url_pattern, function (url) {
-        var protocol_pattern = /^(?:(?:https?|ftp):\/\/)/i;
-        var href = protocol_pattern.test(url) ? url : 'http://' + url;
-        return '<a href="' + href + '" target="' + target + '">' + url + '</a>';
-      });
-    },
-
-    extractUrls(text) {
-      const urlRegex = /(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}\-\x{ffff}0-9]+-?)*[a-z\x{00a1}\-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}\-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?/ig;
-
-      const urls = text.match(urlRegex) || [];
-
-      return urls;
     }
   },
 
@@ -362,7 +254,6 @@ export default {
     }
 
     this.$socket.client.emit('join', { username: this.username, room: this.room });
-
   },
 
   watch: {
