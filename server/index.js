@@ -52,13 +52,15 @@ io.on('connection', async socket => {
   socket.on('message', async ({ message, attachment }) => {
     const user = getCurrentUser(socket.id);
 
-    let messages = await formatMessage(user, message, attachment);
-    messages.forEach(formattedMessage => {
-      io.to(user.room).emit(
-        'messageChannel', 
-        formattedMessage
-      );
-    });
+    if (user) {
+      let messages = await formatMessage(user, message, attachment);
+      messages.forEach(formattedMessage => {
+        io.to(user.room).emit(
+          'messageChannel', 
+          formattedMessage
+        );
+      });
+    }
   });
 
   // Listen for typing event
