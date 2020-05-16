@@ -9,7 +9,7 @@ import EvaIcons from 'vue-eva-icons'
 import VueJsDialog from 'vuejs-dialog'
 import VueTippy, { TippyComponent } from 'vue-tippy'
 
-Vue.use(VueSocketIOExt, SocketIO('/'));
+Vue.use(VueSocketIOExt, SocketIO(process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : '/'));
 Vue.use(EvaIcons);
 Vue.use(VueJsDialog);
 Vue.use(VueTippy, {
