@@ -90,7 +90,7 @@ import Users from '@/components/Users.vue'
 import Messages from '@/components/Messages.vue'
 import Loader from '@/components/Loader.vue'
 
-const { handleUrls, containsUrls, wrapURLs } = require('@/utils/urls');
+const { handleUrls, containsUrls } = require('@/utils/urls');
 const { upload } = require('@/utils/upload');
 
 export default {
@@ -243,7 +243,6 @@ export default {
 
       if (containsUrls(message.message.content)) {
         additionalMessages = await handleUrls(message.message.content, message);
-        message.message.content = wrapURLs(message.message.content);
       }
 
       this.messages.push(message);

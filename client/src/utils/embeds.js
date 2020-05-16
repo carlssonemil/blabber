@@ -1,13 +1,7 @@
-import axios from 'axios';
-
 const regExps = {
   image: /\.(jpe?g|gif|png|webp)(?=\?|$)/,
   video: /\.(mp4)(?=\?|$)/,
-  audio: /\.(mp3)(?=\?|$)/,
-  embeds: {
-    youtube: /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/,
-    vimeo: /^(https?:\/\/)?(www\.)?(vimeo\.com)\/.+$/
-  }
+  audio: /\.(mp3)(?=\?|$)/
 };
 
 async function handleEmbeds(url) {
@@ -49,43 +43,6 @@ async function handleEmbeds(url) {
       };
     }
 
-    // Handle youtube
-    case (url.match(regExps.embeds.youtube) || {}).input: {
-      const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-      const match = url.match(regExp);
-      const youtubeID = match[2];
-
-      return {
-        type: 'video',
-        content: 
-        `<iframe
-            src="https://www.youtube.com/embed/${youtubeID}"
-            allowfullscreen
-            allowtransparency
-            allow="autoplay"
-          ></iframe>`
-      };
-    }
-
-    // Handle vimeo
-    case (url.match(regExps.embeds.vimeo) || {}).input: {
-      return await axios.get(`https://vimeo.com/api/oembed.json?url=${url}`)
-        .then(response => {
-          return {
-            type: 'video',
-            height: response.data.height,
-            width: response.data.width,
-            content: 
-            `<iframe
-                src="https://player.vimeo.com/video/${response.data.video_id}"
-                webkitallowfullscreen 
-                mozallowfullscreen 
-                allowfullscreen
-              ></iframe>`
-          }
-        }).catch(error => { console.error(error); });
-    }
-    
     default:
       return null;
   }

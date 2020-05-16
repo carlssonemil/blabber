@@ -3,7 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
-const formatMessage = require('./utils/messages');
+const { formatMessage, formatNotice } = require('./utils/messages');
 const { 
   userJoin, 
   getCurrentUser, 
@@ -28,25 +28,20 @@ if (process.env.NODE_ENV === 'production') {
   app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
 }
 
-const botUser = {
-  id: 1,
-  username: 'Blabber Bot'
-}
-
 // Run when client connects
-io.on('connection', socket => {
+io.on('connection', async socket => {
   socket.on('join', ({ username, room }) => {
     const user = userJoin(socket.id, username, room);
 
     socket.join(user.room);
 
     // Welcome current user
-    socket.emit('messageChannel', formatMessage(botUser, 'Welcome to Blabber! 👋', 'notice'));
+    socket.emit('messageChannel', formatNotice('Welcome to Blabber! 👋'));
 
     // Broadcast when a user connects
     socket.broadcast.to(user.room).emit(
       'messageChannel', 
-      formatMessage(botUser, `${user.username} has joined the chat`, 'notice')
+      formatNotice(`${user.username} has joined the chat`)
     );
 
     // Send users and room info
@@ -54,13 +49,16 @@ io.on('connection', socket => {
   });
 
   // Listen for message
-  socket.on('message', (message) => {
+  socket.on('message', async ({ message, attachment }) => {
     const user = getCurrentUser(socket.id);
 
-    io.to(user.room).emit(
-      'messageChannel', 
-      formatMessage(user, message)
-    );
+    let messages = await formatMessage(user, message, attachment);
+    messages.forEach(formattedMessage => {
+      io.to(user.room).emit(
+        'messageChannel', 
+        formattedMessage
+      );
+    });
   });
 
   // Listen for typing event
@@ -96,7 +94,7 @@ function disconnectUser(id) {
   if (user) {
     io.to(user.room).emit(
       'messageChannel', 
-      formatMessage(botUser, `${user.username} has left the chat`, 'notice')
+      formatNotice(`${user.username} has left the chat`)
     );
 
     // Send users and room info
