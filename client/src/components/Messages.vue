@@ -20,7 +20,15 @@
           :style="{ 
             paddingBottom: message.message.type.startsWith('video') ? (message.message.height / message.message.width) * 100 + '%' : null,
             width: message.message.type.startsWith('video') || message.message.type === 'notice' ? '100%' : 'auto'
-          }"></div>
+          }">
+      </div>
+
+      <div v-if="message.message.oembed" 
+          class="content oembed"
+          :data-type="message.message.oembed.type">
+        <img v-if="message.message.oembed.type.startsWith('photo') || message.message.oembed.type.startsWith('image')" 
+             :src="message.message.oembed.url">
+      </div>
 
       <div class="content attachment" 
           v-if="message.message.attachment" 
@@ -133,7 +141,8 @@ export default {
         width: 100%;
       }
 
-      &[data-type^="image"] {
+      &[data-type^="image"],
+      &[data-type^="photo"] {
         background: none !important;
         overflow: hidden;
         padding: 0 !important;

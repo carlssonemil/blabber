@@ -25,7 +25,7 @@ async function formatMessage(user, message, attachment) {
       if (content) {
         messages.push({
           user,
-          message: content,
+          message: { oembed: content },
           timestamp: new Date()
         })
       }
@@ -42,12 +42,7 @@ async function embed(url) {
         return resolve(null);
       }
   
-      return resolve({
-        content: response.html,
-        height: response.height,
-        type: response.type,
-        width: response.width
-      });
+      return resolve(response);
     });
   });
 }
