@@ -27,12 +27,9 @@ async function handleEmbeds(url) {
         height,
         width,
         content: 
-          `<iframe
-            src="${url}"
-            allowfullscreen
-            allowtransparency
-            allow="autoplay"
-          ></iframe>`
+          `<video controls>
+            <source src="${url}">
+          </video>`
       };
     }
 

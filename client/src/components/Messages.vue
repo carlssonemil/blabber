@@ -166,6 +166,10 @@ export default {
           top: 0;
           width: 100%;
         }
+
+        /deep/ video {
+          width: 100%;
+        }
       }
 
       &[data-type^="audio"] {
