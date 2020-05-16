@@ -64,16 +64,19 @@ io.on('connection', async socket => {
   // Listen for typing event
   socket.on('typing', (isTyping) => {
     const user = getCurrentUser(socket.id);
-    const users = getRoomUsers(user.room);
 
-    users.map(u => {
-      if (u.id === user.id) {
-        u.typing = isTyping;
-      }
-    });
-
-    // Send users and room info
-    socket.broadcast.to(user.room).emit('users', users);
+    if (user) {
+      const users = getRoomUsers(user.room);
+  
+      users.map(u => {
+        if (u.id === user.id) {
+          u.typing = isTyping;
+        }
+      });
+  
+      // Send users and room info
+      socket.broadcast.to(user.room).emit('users', users);
+    }
   });
 
   // Listen for forceDisconnect
