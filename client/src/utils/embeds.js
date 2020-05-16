@@ -15,14 +15,15 @@ async function handleEmbeds(url) {
   switch (url) {
 
     // Handle images
-    case (url.match(regExps.image) || {}).input:
+    case (url.match(regExps.image) || {}).input: {
       return {
         type: 'image',
         content: `<img src="${url}" />`
       };
+    }
 
     // Handle videos
-    case (url.match(regExps.video) || {}).input:
+    case (url.match(regExps.video) || {}).input: {
       return {
         type: 'video',
         content: 
@@ -33,9 +34,10 @@ async function handleEmbeds(url) {
             allow="autoplay"
           ></iframe>`
       };
+    }
 
     // Handle audio
-    case (url.match(regExps.audio) || {}).input:
+    case (url.match(regExps.audio) || {}).input: {
       return {
         type: 'audio',
         content: 
@@ -45,6 +47,7 @@ async function handleEmbeds(url) {
             Your browser does not support the audio tag.
           </audio>`
       };
+    }
 
     // Handle youtube
     case (url.match(regExps.embeds.youtube) || {}).input: {
@@ -65,7 +68,7 @@ async function handleEmbeds(url) {
     }
 
     // Handle vimeo
-    case (url.match(regExps.embeds.vimeo) || {}).input:
+    case (url.match(regExps.embeds.vimeo) || {}).input: {
       return await axios.get(`https://vimeo.com/api/oembed.json?url=${url}`)
         .then(response => {
           return {
@@ -81,7 +84,8 @@ async function handleEmbeds(url) {
               ></iframe>`
           }
         }).catch(error => { console.error(error); });
-
+    }
+    
     default:
       return null;
   }
