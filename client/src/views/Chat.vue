@@ -73,6 +73,11 @@
           <eva-icon v-if="!uploading" name="paper-plane-outline" fill="white"></eva-icon>
           <Loader :size="25" :thickness="3" :inverted="true" :color="'white'" v-if="uploading" />
         </button>
+
+        <div v-if="uploadError" class="upload-error" @click="uploadError = false">
+          <eva-icon name="alert-circle-outline" fill="white"></eva-icon>
+          <p>The attachment failed to upload, try again.</p>
+        </div>
       </div>
 
       <input type="file" id="attachment-input" ref="attachmentInput" @change="attachFile($event.target.files[0])">
@@ -84,9 +89,9 @@
 import Users from '@/components/Users.vue'
 import Messages from '@/components/Messages.vue'
 import Loader from '@/components/Loader.vue'
-import axios from 'axios'
 
 const { handleUrls, containsUrls, wrapURLs } = require('@/utils/urls');
+const { upload } = require('@/utils/upload');
 
 export default {
   name: 'Chat',
@@ -106,7 +111,8 @@ export default {
       connected: false,
       message: '',
       attachment: null,
-      uploading: false
+      uploading: false,
+      uploadError: false
     }
   },
 
@@ -134,29 +140,36 @@ export default {
         };
 
         if (this.attachment) {
-          let formData = new FormData();
-
-          formData.append('file', this.attachment);
-          
           this.uploading = true;
 
-          await axios.post('https://cors-anywhere.herokuapp.com/https://uguu.se/api.php?d=upload-tool', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },
-            crossdomain: true
-          })
-          .then(response => {
-            message.attachment = {
-              name: this.attachment.name,
-              type: this.attachment.type,
-              size: this.attachment.size,
-              url: response.data
+          let response = await upload(this.attachment);
+
+          if (response.isAxiosError) {
+            if (this.message) {
+              let confirm = await this.$dialog.confirm(`
+                  <h3>The upload failed 😟</h3>
+                  <h4>Do you still want to send your message?</h4>
+                `, { html: true, cancelText: 'No, cancel', okText: 'Yes, send it', backdropClose: true })
+                .then(() => {
+                  return true;
+                })
+                .catch(() => {
+                  return false;
+                });
+
+              if (!confirm) {
+                this.uploading = false;
+                return;
+              }
+            } else {
+              this.uploading = false;
+              this.uploadError = true;
+              return;
             }
-          })
-          .catch(error => {
-            console.error(error);
-          });
+          } else {
+            this.uploadError = false;
+            message.attachment = response;
+          }
         }
 
         this.$socket.client.emit('message', message);
@@ -432,10 +445,13 @@ export default {
     }
 
     .footer {
+      $footer-padding: 25px;
+
       align-items: center;
       display: flex;
       justify-content: space-between;
-      padding: 25px;
+      padding: $footer-padding;
+      position: relative;
       width: 100%;
 
       .message-input {
@@ -482,6 +498,37 @@ export default {
 
       .button, button {
         margin-left: 10px;
+      }
+
+      .upload-error {
+        align-items: center;
+        background: #ee5253;
+        border-radius: 100px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        left: $footer-padding;
+        padding: 5px 10px;
+        position: absolute;
+        top: 0;
+        transform: translateY(-50%);
+        transition: .25s ease;
+        width: calc(100% - #{$footer-padding * 2});
+
+        &:hover {
+          background: lighten(#ee5253, 5%);
+        }
+
+        i {
+          margin-right: 6px;
+          position: relative;
+          top: 1px;
+        }
+
+        p {
+          font-size: 16px;
+          padding-right: 10px;
+        }
       }
     }
 
