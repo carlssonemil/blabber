@@ -25,6 +25,16 @@
       <div class="content attachment" v-if="message.message.attachment" :data-type="message.message.attachment.type">
         <img v-if="message.message.attachment.type.startsWith('image')" :src="message.message.attachment.url">
 
+        <audio v-else-if="message.message.attachment.type.startsWith('audio')" controls>
+          <source :src="message.message.attachment.url" :type="message.message.attachment.type">
+          Your browser does not support the audio tag.
+        </audio>
+
+        <video v-else-if="message.message.attachment.type.startsWith('video')" controls>
+          <source :src="message.message.attachment.url" :type="message.message.attachment.type">
+          Your browser does not support the video tag.
+        </video>
+
         <div v-else>
           <eva-icon name="attach-outline" :fill="message.user.id === socketId ? 'white' : 'black'" width="14" height="14"></eva-icon>
           <a :href="message.message.attachment.url" target="_blank">{{ message.message.attachment.name }}</a>
@@ -124,7 +134,7 @@ export default {
         }
       }
 
-      &[data-type="video"] {
+      &[data-type^="video"] {
         background: none !important;
         height: 0;
         overflow: hidden;
@@ -140,7 +150,7 @@ export default {
         }
       }
 
-      &[data-type="audio"] {
+      &[data-type^="audio"] {
         background: none !important;
         padding: 0;
       }
