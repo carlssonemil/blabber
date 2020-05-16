@@ -5,8 +5,6 @@ async function handleUrls(text, message) {
 
   let additionalMessages = [];
 
-  console.log(additionalMessages, urls);
-
   for (let url of urls) {
     let embedMessage = await handleEmbeds(url);
 
