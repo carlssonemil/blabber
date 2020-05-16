@@ -18,11 +18,18 @@
           :data-type="message.message.type" 
           v-html="message.message.content"
           :style="{ 
-            paddingBottom: message.message.type === 'video' ? (message.message.height / message.message.width) * 100 + '%' : null,
-            width: message.message.type === 'video' || message.message.type === 'notice' ? '100%' : 'auto'
+            paddingBottom: message.message.type.startsWith('video') ? (message.message.height / message.message.width) * 100 + '%' : null,
+            width: message.message.type.startsWith('video') || message.message.type === 'notice' ? '100%' : 'auto'
           }"></div>
 
-      <div class="content attachment" v-if="message.message.attachment" :data-type="message.message.attachment.type">
+      <div class="content attachment" 
+          v-if="message.message.attachment" 
+          :data-type="message.message.attachment.type"
+          :style="{
+            paddingBottom: message.message.attachment.type.startsWith('video') ? (message.message.attachment.height / message.message.attachment.width) * 100 + '%' : null,
+            width: message.message.attachment.type.startsWith('video') ? '100%' : 'auto'
+          }">
+
         <img v-if="message.message.attachment.type.startsWith('image')" :src="message.message.attachment.url">
 
         <audio v-else-if="message.message.attachment.type.startsWith('audio')" controls>
@@ -30,10 +37,12 @@
           Your browser does not support the audio tag.
         </audio>
 
-        <video v-else-if="message.message.attachment.type.startsWith('video')" controls>
-          <source :src="message.message.attachment.url" :type="message.message.attachment.type">
-          Your browser does not support the video tag.
-        </video>
+        <iframe v-else-if="message.message.attachment.type.startsWith('video')"
+            :src="message.message.attachment.url"
+            allowfullscreen
+            allowtransparency
+            allow="autoplay"
+          ></iframe>
 
         <div v-else>
           <eva-icon name="attach-outline" :fill="message.user.id === socketId ? 'white' : 'black'" width="14" height="14"></eva-icon>

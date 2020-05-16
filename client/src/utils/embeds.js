@@ -1,3 +1,5 @@
+import { getVideoDimensions } from "./video";
+
 const regExps = {
   image: /\.(jpe?g|gif|png|webp)(?=\?|$)/,
   video: /\.(mp4)(?=\?|$)/,
@@ -18,8 +20,12 @@ async function handleEmbeds(url) {
 
     // Handle videos
     case (url.match(regExps.video) || {}).input: {
+      let { height, width } = await getVideoDimensions(url);
+
       return {
         type: 'video',
+        height,
+        width,
         content: 
           `<iframe
             src="${url}"

@@ -92,6 +92,7 @@ import Loader from '@/components/Loader.vue'
 
 const { handleUrls, containsUrls } = require('@/utils/urls');
 const { upload } = require('@/utils/upload');
+const { getVideoDimensions } = require('@/utils/video');
 
 export default {
   name: 'Chat',
@@ -169,6 +170,13 @@ export default {
           } else {
             this.uploadError = false;
             message.attachment = response;
+
+            if (message.attachment.type.startsWith('video')) {
+              let { height, width } = await getVideoDimensions(response.url);
+
+              message.attachment.height = height;
+              message.attachment.width = width;
+            }
           }
         }
 
