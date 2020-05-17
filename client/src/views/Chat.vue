@@ -57,7 +57,7 @@
                   placeholder="Enter message..." 
                   v-model="message" 
                   @keydown="typing(true)"
-                  @keyup="typing(false)" 
+                  @keyup="typing(false), format()" 
                   @keyup.enter="send()"
                   :disabled="uploading"
                   ref="messageInput">
@@ -93,6 +93,7 @@ import Loader from '@/components/Loader.vue'
 const { handleUrls, containsUrls } = require('@/utils/urls');
 const { upload } = require('@/utils/upload');
 const { getVideoDimensions } = require('@/utils/video');
+const { emojify } = require('@/utils/emoji');
 
 export default {
   name: 'Chat',
@@ -230,6 +231,12 @@ export default {
       `;
 
       this.$dialog.alert(html, { html: true, okText: 'Close', backdropClose: true });
+    },
+
+    format() {
+      if (this.message) {
+        this.message = emojify(this.message);
+      }
     },
 
     attachFile(file) {
