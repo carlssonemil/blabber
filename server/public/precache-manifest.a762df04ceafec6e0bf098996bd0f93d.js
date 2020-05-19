@@ -24,12 +24,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/about.b2ae0aa9.css"
   },
   {
-    "revision": "e372c2bf793a9d1cd266",
+    "revision": "ed32e1caf2602fe98067",
     "url": "/css/app.6cee1045.css"
   },
   {
-    "revision": "8d278916859b33496b7b",
-    "url": "/css/chat.c32831e6.css"
+    "revision": "f62a715f07ec800203ac",
+    "url": "/css/chat.77a60eca.css"
   },
   {
     "revision": "a24c2b7e70dc1f97d92e",
@@ -56,7 +56,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/favicon-32x32.png"
   },
   {
-    "revision": "3ee90bd00a7a6ba4a97c447fa012a5e0",
+    "revision": "088e1e3cb4baacce5cec9c45ce0d5b5d",
     "url": "/index.html"
   },
   {
@@ -68,12 +68,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/about.08bf6cfe.js"
   },
   {
-    "revision": "e372c2bf793a9d1cd266",
-    "url": "/js/app.dc219192.js"
+    "revision": "ed32e1caf2602fe98067",
+    "url": "/js/app.902bfdbb.js"
   },
   {
-    "revision": "8d278916859b33496b7b",
-    "url": "/js/chat.3d20eb43.js"
+    "revision": "f62a715f07ec800203ac",
+    "url": "/js/chat.c4e9cd9e.js"
   },
   {
     "revision": "65f5105b9fa0a62a374b",
