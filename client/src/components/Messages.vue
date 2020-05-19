@@ -23,11 +23,21 @@
           }">
       </div>
 
-      <div v-if="message.message.oembed && message.message.oembed.type !== 'rich'" 
-          class="content oembed"
+      <div v-if="message.message.oembed && message.message.oembed.type !== 'rich' && message.message.oembed.type !== 'video'" 
+          class="content oembed image"
           :data-type="message.message.oembed.type">
         <img v-if="message.message.oembed.type.startsWith('photo') || message.message.oembed.type.startsWith('image')" 
              :src="message.message.oembed.url">
+      </div>
+
+      <div v-if="message.message.oembed && message.message.oembed.type === 'video'"
+           class="content oembed video"
+           :data-type="message.message.oembed.type"
+           v-html="message.message.oembed.html"
+           :style="{
+             paddingBottom: (message.message.oembed.height / message.message.oembed.width) * 100 + '%',
+             width: '100%'
+           }">
       </div>
 
       <div class="content attachment" 
