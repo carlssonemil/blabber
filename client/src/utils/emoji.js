@@ -1,3 +1,6 @@
+
+/* eslint-disable */
+
 const emojis = {
   ':)': '😊',
   ':-)': '😊',
@@ -41,7 +44,7 @@ const emojis = {
   'XD': '🤣',
   'Dx': '😫',
   ':|': '😐',
-  ':/': '😕',
+  ':/ ': '😕',
   ':S': '🥴',
   '(y)': '👍',
   '(Y)': '👍',
@@ -51,7 +54,6 @@ const emojis = {
   '</3': '💔'
 }
 
-//eslint-disable-next-line
 const regExp = new RegExp(Object.keys(emojis).map(k => {
   return k = k.replace(':', '\\:')
               .replace(')', '\\)')
@@ -64,7 +66,7 @@ const regExp = new RegExp(Object.keys(emojis).map(k => {
               .replace('>', '\\>')
               .replace('<', '\\<')
               .replace('|', '\\|')
-  }).join('|'), 'g');
+  }).join('|') + '\s+$', 'g');
 
 function emojify(string) {
   return string.replace(regExp, (matched) => emojis[matched] ? emojis[matched] : false);
