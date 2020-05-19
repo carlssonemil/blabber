@@ -27,7 +27,7 @@
           <router-link to="/privacy">Privacy</router-link>
           <router-link to="/terms">Terms</router-link>
         </nav>
-        <p>Copyright {{ new Date().getFullYear() }}<span>&bullet;</span><a href="">Version {{ version }}</a></p>
+        <p>Copyright {{ new Date().getFullYear() }}<span>&bullet;</span><a href="https://github.com/carlssonemil/blabber/releases">Version {{ version }}</a></p>
       </div>
     </aside>
 
