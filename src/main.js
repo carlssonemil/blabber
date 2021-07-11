@@ -8,7 +8,7 @@ import EvaIcons from 'vue-eva-icons'
 import VueJsDialog from 'vuejs-dialog'
 import VueTippy, { TippyComponent } from 'vue-tippy'
 
-Vue.use(VueSocketIOExt, SocketIO(process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : '/api/', { transports: ['websocket'] }));
+Vue.use(VueSocketIOExt, SocketIO(process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://blabber-application.herokuapp.com/', { transports: ['websocket'] }));
 Vue.use(EvaIcons);
 Vue.use(VueJsDialog);
 Vue.use(VueTippy, {
