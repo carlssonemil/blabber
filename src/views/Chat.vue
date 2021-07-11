@@ -27,7 +27,7 @@
           <router-link to="/privacy">Privacy</router-link>
           <router-link to="/terms">Terms</router-link>
         </nav>
-        <p>Copyright {{ new Date().getFullYear() }}<span>&bullet;</span><span>Version {{ version }}</span></p>
+        <p>Copyright {{ new Date().getFullYear() }}<span>&bullet;</span>Version {{ version }}</p>
       </div>
     </aside>
 
