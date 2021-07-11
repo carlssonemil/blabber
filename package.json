@@ -5,7 +5,7 @@
   "author": "Emil Carlsson",
   "license": "MIT",
   "scripts": {
-    "serve": "concurrently --kill-others \"vue-cli-service serve\" \"nodemon public/api/index.js\"",
+    "serve": "concurrently --kill-others \"vue-cli-service serve\" \"nodemon api/index.js\"",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
