@@ -9,6 +9,9 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "engines": {
+    "node": ">= 14.15.1"
+  },
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
