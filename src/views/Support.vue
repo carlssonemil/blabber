@@ -2,13 +2,19 @@
   <div class="support page">
     <h2>Support</h2>
     <p>Feel free to contact me with any questions, bugs or feature requests.</p>
-    <a href="mailto:hello@emilcarlsson.se"><eva-icon name="email-outline" /><span>hello@emilcarlsson.se</span></a>
+    <a href="mailto:hello@emilcarlsson.se"><Mail /><span>hello@emilcarlsson.se</span></a>
   </div>
 </template>
 
 <script>
+import { Mail } from 'lucide-vue-next'
+
 export default {
-  name: 'support'
+  name: 'support',
+
+  components: {
+    Mail
+  }
 }
 </script>
 
@@ -22,7 +28,7 @@ h2 {
 }
 
 h3 {
-  margin: 40px 0 20px; 
+  margin: 40px 0 20px;
 }
 
 p {
@@ -44,7 +50,7 @@ a {
     font-size: 16px;
   }
 
-  i {
+  svg {
     margin-right: 8px;
     opacity: .5;
     position: relative;

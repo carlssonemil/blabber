@@ -1,27 +1,19 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
-import store from './store'
-import SocketIO from 'socket.io-client'
-import VueSocketIOExt from 'vue-socket.io-extended'
-import EvaIcons from 'vue-eva-icons'
-import VueJsDialog from 'vuejs-dialog'
-import VueTippy, { TippyComponent } from 'vue-tippy'
+import { plugin as VueTippy, Tippy } from 'vue-tippy'
+import 'tippy.js/dist/tippy.css'
+import { socketPlugin } from './plugins/socket'
+import { dialogPlugin } from './plugins/dialog'
 
-Vue.use(VueSocketIOExt, SocketIO(process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://blabber-application.herokuapp.com/', { transports: ['websocket'] }));
-Vue.use(EvaIcons);
-Vue.use(VueJsDialog);
-Vue.use(VueTippy, {
-  directive: 'tippy',
-  arrow: true
-});
+const app = createApp(App)
 
-Vue.component('tippy', TippyComponent);
+app.use(createPinia())
+app.use(router)
+app.use(VueTippy, { directive: 'tippy', defaultProps: { arrow: true } })
+app.component('tippy', Tippy)
+app.use(socketPlugin)
+app.use(dialogPlugin)
 
-Vue.config.productionTip = false
-
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+app.mount('#app')

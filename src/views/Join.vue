@@ -3,7 +3,7 @@
     <h3>You've been invited to join room:</h3>
 
     <h2 class="room">
-      <eva-icon name="message-square-outline"></eva-icon>
+      <MessageSquare />
       {{ room }}
     </h2>
 
@@ -15,8 +15,15 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store'
+import { MessageSquare } from 'lucide-vue-next'
+
 export default {
   name: 'join',
+
+  components: {
+    MessageSquare
+  },
 
   data() {
     return {
@@ -28,24 +35,23 @@ export default {
   methods: {
     enter() {
       if (this.room && this.username) {
-        this.$store.dispatch('setUser', { username: this.username, room: this.room });
-        this.$router.push({ name: 'Chat', params: { username: this.username, room: this.room } });
+        useUserStore().setUser({ username: this.username, room: this.room })
+        this.$router.push({ name: 'Chat', params: { username: this.username, room: this.room } })
       }
     }
   },
 
   mounted() {
     if (!this.$route.params.room) {
-      console.log('hello');
-      this.$router.push({ name: 'Home' });
+      this.$router.push({ name: 'Home' })
     }
 
-    let username = this.$store.state.user.username;
-    let room = this.$route.params.room;
-    let test = false;
+    let username = useUserStore().user.username
+    let room = this.$route.params.room
+    let test = false
 
     if (username && test) {
-      this.$router.push({ name: 'Chat', params: { username, room } });
+      this.$router.push({ name: 'Chat', params: { username, room } })
     }
   }
 }
@@ -62,7 +68,7 @@ export default {
     justify-content: center;
     margin-top: 25px;
 
-    i {
+    svg {
       margin-right: 10px;
       opacity: .5;
       position: relative;

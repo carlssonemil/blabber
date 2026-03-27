@@ -6,12 +6,12 @@
 
         <h3>
           <span class="title">
-            <eva-icon name="people-outline" fill="white"></eva-icon>
+            <UsersIcon color="white" />
             <span>Users</span>
           </span>
 
           <span class="invite-user" @click="invite()">
-            <eva-icon name="person-add-outline" fill="white" width="20" height="20"></eva-icon>
+            <UserPlus color="white" :size="20" />
             <span>Invite users</span>
           </span>
         </h3>
@@ -35,12 +35,12 @@
       <div class="header">
         <div class="info">
           <div class="user" content="Username" v-tippy>
-            <eva-icon name="person-outline"></eva-icon>
+            <User />
             <p>{{ username }}</p>
           </div>
 
           <div class="room"  content="Room" v-tippy>
-            <eva-icon name="message-square-outline"></eva-icon>
+            <MessageSquare />
             <p>{{ room }}</p>
           </div>
         </div>
@@ -50,16 +50,16 @@
       <div class="mobile-header">
         <div class="info">
           <div class="user" :content="username" v-tippy>
-            <eva-icon name="person-outline"></eva-icon>
+            <User />
           </div>
 
           <div class="room" :content="room" v-tippy>
-            <eva-icon name="message-square-outline"></eva-icon>
+            <MessageSquare />
           </div>
 
           <tippy trigger="click">
             <template v-slot:trigger>
-              <eva-icon name="people-outline"></eva-icon>
+              <UsersIcon />
             </template>
 
             <span>
@@ -68,11 +68,11 @@
           </tippy>
 
           <div class="invite-user">
-            <eva-icon name="person-add-outline" @click="invite()"></eva-icon>
+            <UserPlus @click="invite()" />
           </div>
         </div>
         <button @click="leave()" class="icon">
-          <eva-icon name="log-out" fill="white"></eva-icon>
+          <LogOut color="white" />
         </button>
       </div>
 
@@ -82,29 +82,29 @@
 
       <div class="footer">
         <div class="message-input">
-          <input  type="text" 
-                  placeholder="Enter message..." 
-                  v-model="message" 
+          <input  type="text"
+                  placeholder="Enter message..."
+                  v-model="message"
                   @keydown="typing(true)"
-                  @keyup="typing(false), format()" 
+                  @keyup="typing(false), format()"
                   @keyup.enter="send()"
                   :disabled="uploading"
                   ref="messageInput">
           <div class="attached-file" :class="{ disabled: uploading }" v-if="attachment" ref="attachedFile">
             <span :content="attachment.name" v-tippy>{{ attachment.name }}</span>
-            <eva-icon name="close-outline" fill="white" @click="removeAttachment()"></eva-icon>
+            <X color="white" @click="removeAttachment()" />
           </div>
         </div>
         <label for="attachment-input" class="button icon" :class="{ disabled: uploading }" content="Attach file" v-tippy>
-          <eva-icon name="attach-outline" fill="white"></eva-icon>
+          <Paperclip color="white" />
         </label>
         <button class="icon" @click="send()" :content="uploading ? 'Sending...' : 'Send'" v-tippy>
-          <eva-icon v-if="!uploading" name="paper-plane-outline" fill="white"></eva-icon>
+          <Send v-if="!uploading" color="white" />
           <Loader :size="25" :thickness="3" :inverted="true" :color="'white'" v-if="uploading" />
         </button>
 
         <div v-if="uploadError" class="upload-error" @click="uploadError = false">
-          <eva-icon name="alert-circle-outline" fill="white"></eva-icon>
+          <AlertCircle color="white" />
           <p>The attachment failed to upload, try again.</p>
         </div>
       </div>
@@ -115,9 +115,11 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store'
 import Users from '@/components/Users.vue'
 import Messages from '@/components/Messages.vue'
 import Loader from '@/components/Loader.vue'
+import { Users as UsersIcon, UserPlus, User, MessageSquare, X, Paperclip, Send, AlertCircle, LogOut } from 'lucide-vue-next'
 
 const { handleUrls, containsUrls } = require('@/utils/urls');
 const { upload } = require('@/utils/upload');
@@ -130,13 +132,23 @@ export default {
   components: {
     Users,
     Messages,
-    Loader
+    Loader,
+    UsersIcon,
+    UserPlus,
+    User,
+    MessageSquare,
+    X,
+    Paperclip,
+    Send,
+    AlertCircle,
+    LogOut
   },
 
   data() {
+    const store = useUserStore()
     return {
-      username: this.$route.params.username || this.$store.state.user.username,
-      room: this.$route.params.room || this.$store.state.user.room,
+      username: this.$route.params.username || store.user.username,
+      room: this.$route.params.room || store.user.room,
       users: [],
       messages: [],
       connected: false,
@@ -150,16 +162,6 @@ export default {
   computed: {
     version() {
       return require('../../package.json').version;
-    }
-  },
-
-  sockets: {
-    users(users) {
-      this.users = users;
-    },
-
-    messageChannel(message) {
-      this.handleMessage(message);
     }
   },
 
@@ -177,16 +179,11 @@ export default {
 
           if (response.isAxiosError) {
             if (this.message) {
-              let confirm = await this.$dialog.confirm(`
-                  <h3>The upload failed 😟</h3>
-                  <h4>Do you still want to send your message?</h4>
-                `, { html: true, cancelText: 'No, cancel', okText: 'Yes, send it', backdropClose: true })
-                .then(() => {
-                  return true;
-                })
-                .catch(() => {
-                  return false;
-                });
+              let confirm = await this.$dialog.confirm(
+                'The upload failed 😟',
+                'Do you still want to send your message?',
+                { cancelText: 'No, cancel', okText: 'Yes, send it' }
+              ).then(() => true).catch(() => false);
 
               if (!confirm) {
                 this.uploading = false;
@@ -210,8 +207,8 @@ export default {
           }
         }
 
-        this.$socket.client.emit('message', message);
-        this.$socket.client.emit('typing', false);
+        this.$socket.emit('message', message);
+        this.$socket.emit('typing', false);
         this.message = '';
         this.uploading = false;
         this.removeAttachment();
@@ -223,43 +220,32 @@ export default {
 
       if (isTyping) {
         clearTimeout(typing);
-        this.$socket.client.emit('typing', true);
+        this.$socket.emit('typing', true);
       } else {
         clearTimeout(typing);
         typing = setTimeout(() => {
-          this.$socket.client.emit('typing', false);
+          this.$socket.emit('typing', false);
         }, 4000);
       }
     },
 
     leave() {
-      this.$dialog.confirm(`
-        <h3>Are you sure you want to leave the room?</h3>
-        <p>You won't be recieving new messages until you rejoin.</p>
-        `, { html: true, cancelText: 'Cancel', backdropClose: true })
-          .then(() => {
-            this.room = null;
-            this.$socket.client.emit('leave');
-            this.$store.dispatch('clearUser');
-            this.$router.push({ name: 'Home' });
-          })
-          .catch(() => {
-            return;
-          });
+      this.$dialog.confirm(
+        'Are you sure you want to leave the room?',
+        "You won't be receiving new messages until you rejoin.",
+        { cancelText: 'Cancel' }
+      ).then(() => {
+        this.room = null;
+        this.$socket.emit('leave');
+        useUserStore().clearUser();
+        this.$router.push({ name: 'Home' });
+      }).catch(() => {});
     },
 
     invite() {
       const joinUrl = `${window.location.origin}/join/${this.room}`;
-
-      let html = `
-        <h3 style="margin-bottom: 20px">Send the link below to a friend</h3>
-        <div class="copy">
-          <input type="text" value="${joinUrl}" />
-          <button onclick="copyToClipboard(this, '${joinUrl}')">Copy</button>
-        </div>
-      `;
-
-      this.$dialog.alert(html, { html: true, okText: 'Close', backdropClose: true });
+      navigator.clipboard.writeText(joinUrl).catch(() => {});
+      this.$dialog.alert('Invite link copied!', joinUrl);
     },
 
     format() {
@@ -307,29 +293,32 @@ export default {
   created() {
     if (!this.username || !this.room) {
       this.$router.push({ name: 'Home' });
+      return;
     }
 
-    this.$socket.client.emit('join', { username: this.username, room: this.room });
+    this.$socket.on('users', (users) => { this.users = users; });
+    this.$socket.on('messageChannel', (message) => { this.handleMessage(message); });
+    this.$socket.emit('join', { username: this.username, room: this.room });
+  },
+
+  beforeUnmount() {
+    this.$socket.off('users');
+    this.$socket.off('messageChannel');
   },
 
   watch: {
     $route() {
-      this.$socket.client.emit('leave');
+      this.$socket.emit('leave');
     }
   },
 
   beforeRouteLeave(to, from, next) {
     if (this.room) {
-      this.$dialog.confirm(`
-        <h3>Are you sure you want to leave the room?</h3>
-        <p>You won't be recieving new messages until you rejoin.</p>
-        `, { html: true, cancelText: 'Cancel', backdropClose: true })
-          .then(() => {
-            next();
-          })
-          .catch(() => {
-            next(false);
-          });
+      this.$dialog.confirm(
+        'Are you sure you want to leave the room?',
+        "You won't be receiving new messages until you rejoin.",
+        { cancelText: 'Cancel' }
+      ).then(() => next()).catch(() => next(false));
     } else {
       next();
     }
@@ -397,12 +386,12 @@ export default {
             opacity: 1;
           }
 
-          i {
+          svg {
             margin-right: 6px;
           }
         }
 
-        i {
+        svg {
           margin-right: 10px;
           position: relative;
           top: 1px;
@@ -482,7 +471,7 @@ export default {
           display: flex;
           margin: 0 20px;
 
-          i {
+          svg {
             margin-right: 8px;
             position: relative;
             top: 2px;
@@ -511,7 +500,7 @@ export default {
           margin-left: 30px;
         }
 
-        i {
+        svg {
           margin: 0;
         }
       }
@@ -573,7 +562,7 @@ export default {
             text-overflow: ellipsis;
           }
 
-          i {
+          svg {
             cursor: pointer;
             position: relative;
             top: 1px;
@@ -612,13 +601,13 @@ export default {
           background: lighten(#ee5253, 5%);
         }
 
-        i {
+        svg {
           margin-right: 6px;
           position: relative;
           top: 1px;
 
           @include mobile {
-            ::v-deep svg {
+            :deep(svg) {
               height: 22px;
               width: 22px;
             }

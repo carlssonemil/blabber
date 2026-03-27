@@ -2,7 +2,7 @@
   <div class="about page">
     <h2>About</h2>
     <p>Blabber is an anonymous real-time chat application made primarily to better my understanding of WebSockets. Built with <a href="https://nodejs.org/en/">Node</a>, <a href="https://expressjs.com/">Express</a>, <a href="https://socket.io/">Socket.io</a> &amp; <a href="https://vuejs.org/">Vue</a>, the entire code base is open source and available on <a href="https://github.com/carlssonemil/blabber">GitHub</a>.</p>
-    
+
     <h3>How does it work?</h3>
     <p>Enter a username and room of your choosing on the front page, send an invite to your friends and start chatting. Simple as that!</p>
     <p class="sub">If you leave the chat page you won't be receiving any new messages, and old messages are not restored upon return.</p>
@@ -10,7 +10,7 @@
     <h3>Features</h3>
     <div class="features">
       <div class="feature" v-for="(feature, index) in features" :key="index">
-        <eva-icon :name="feature.icon"></eva-icon>
+        <component :is="feature.icon" />
         <span>{{ feature.feature }}</span>
       </div>
     </div>
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { ArrowLeftRight, Shield, Paperclip, Film, Image, UserPlus } from 'lucide-vue-next'
+
 export default {
   name: 'about',
 
@@ -27,27 +29,27 @@ export default {
     return {
       features: [
         {
-          icon: 'swap-outline',
+          icon: ArrowLeftRight,
           feature: 'Real-time messaging'
         },
         {
-          icon: 'shield-outline',
+          icon: Shield,
           feature: 'Completely anonymous'
         },
         {
-          icon: 'attach-outline',
+          icon: Paperclip,
           feature: 'Attach and download files'
         },
         {
-          icon: 'film-outline',
+          icon: Film,
           feature: 'Video & audio embedding'
         },
         {
-          icon: 'image-outline',
+          icon: Image,
           feature: 'Image embedding'
         },
         {
-          icon: 'person-add-outline',
+          icon: UserPlus,
           feature: 'Send invitation to current room'
         }
       ]
@@ -80,12 +82,12 @@ export default {
     &:hover {
       background-color: darken(white, 4%);
 
-      i {
+      svg {
         opacity: .75;
       }
     }
 
-    i {
+    svg {
       opacity: .4;
       transition: .25s ease;
     }
@@ -102,7 +104,7 @@ h2 {
 }
 
 h3 {
-  margin: 40px 0 20px; 
+  margin: 40px 0 20px;
 }
 
 p {

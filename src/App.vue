@@ -17,21 +17,30 @@
         <router-link to="/terms">Terms</router-link>
       </nav>
     </footer>
+
+    <AppDialog />
   </div>
 </template>
 
 <script>
+import { useUserStore } from '@/store'
+import AppDialog from '@/components/AppDialog.vue'
+
 export default {
+  components: {
+    AppDialog
+  },
+
   data() {
     return {
       showHeader: false,
-      showFooter: false 
+      showFooter: false
     }
   },
 
   computed: {
     headerButtonText() {
-      return this.$store.state.user.room ? 'Return to chat' : 'Start chatting';
+      return useUserStore().user.room ? 'Return to chat' : 'Start chatting'
     }
   },
 
@@ -55,20 +64,14 @@ export default {
   },
 
   async mounted() {
-    await this.$store.dispatch('getStoredUser');
+    await useUserStore().getStoredUser()
 
-    this.updateUI(this.$route.path);
-
-    //let user = this.$store.state.user;
-
-    //if (user.room) {
-    //  this.$router.push({ name: 'Chat', params: user });
-    //}
+    this.updateUI(this.$route.path)
   },
 
   watch: {
     $route() {
-      this.updateUI(this.$route.path);
+      this.updateUI(this.$route.path)
     }
   }
 }

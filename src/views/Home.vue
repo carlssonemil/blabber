@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store'
 
 export default {
   name: 'Home',
@@ -59,7 +60,7 @@ export default {
   methods: {
     enter() {
       if (this.room && this.username) {
-        this.$store.dispatch('setUser', { username: this.username, room: this.room });
+        useUserStore().setUser({ username: this.username, room: this.room });
         this.$router.push({ name: 'Chat', params: { username: this.username, room: this.room } });
       }
     }
