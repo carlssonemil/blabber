@@ -7,11 +7,16 @@
       Since very few people actually read these, I will keep it short.
       <br />
       <br />
-      We do not store anything on our servers that could be directly linked to you &ndash; no logs, no IPs, <b>nothing</b>. 
-      At the moment we use <a href="https://uguu.se/">Uguu.se</a> for the file hosting, which has the same policy of complete anonymity.
+      Blabber itself does not store anything &ndash; no chat logs, no user accounts, no message history. All state is ephemeral and lives only in memory while you are connected.
       <br />
       <br />
-      We could in the future switch to another host, but will try as best we can to keep this strict anonymity policy.
+      We use <a href="https://uguu.se/">Uguu.se</a> for file hosting. They have a similar policy of not storing user data beyond temporary file hosting.
+      <br />
+      <br />
+      <b>Render</b> — Our API is hosted on <a href="https://render.com">Render</a> (render.com), a cloud infrastructure provider based in the United States. Network traffic, including IP addresses and connection metadata, may be logged by Render's infrastructure as part of normal operations. Render's data practices are governed by their <a href="https://render.com/privacy">Privacy Policy</a>.
+      <br />
+      <br />
+      We could in the future switch to another host, but will always disclose what third-party infrastructure is in use.
     </p>
     
     <h3>Consent</h3>
