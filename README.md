@@ -1,9 +1,7 @@
 # Blabber
 ## Anonymous real-time chat application
 
-Built with [Node](https://nodejs.org/en/), [Express](https://expressjs.com/), [Socket.io](https://socket.io/) & [Vue](https://vuejs.org/). Front-end hosted on [Vercel](https://vercel.com/) and API hosted on [Heroku](https://www.heroku.com/)*. 
-
-###### (* since [Vercel does not currently support WebSocket connections through their Serverless Functions](https://vercel.com/support/articles/do-vercel-serverless-functions-support-websocket-connections))
+Built with [Node](https://nodejs.org/en/), [Express](https://expressjs.com/), [Socket.io](https://socket.io/) & [Vue](https://vuejs.org/). Front-end hosted on [Vercel](https://vercel.com/) and API hosted on [Render](https://render.com/) (required for persistent WebSocket connections).
 
 ## Features
 
@@ -21,7 +19,7 @@ Built with [Node](https://nodejs.org/en/), [Express](https://expressjs.com/), [S
 $ npm install
 
 # Compiles and hot-reloads for development
-$ npm run serve
+$ npm run dev
 
 # Compiles and minifies for production
 $ npm run build
