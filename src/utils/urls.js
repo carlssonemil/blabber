@@ -1,4 +1,4 @@
-const { handleEmbeds } = require('@/utils/embeds');
+import { handleEmbeds } from '@/utils/embeds';
 
 async function handleUrls(text, message) {
   const urls = [...new Set(extractUrls(text).map(url => url.replace(/<\/a>|"/, '')))];

@@ -108,6 +108,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:color';
+
 #messages {
   display: flex;
   flex-direction: column;
@@ -128,7 +130,7 @@ export default {
 
     .username, .timestamp {
       align-self: flex-start;
-      color: darken(white, 40%);
+      color: color.adjust(white, $lightness: -40%);
       cursor: default;
       display: block;
       font-size: 12px;
@@ -229,7 +231,7 @@ export default {
 
       .content {
         background: none;
-        color: darken(white, 40%);
+        color: color.adjust(white, $lightness: -40%);
         font-size: 14px;
         text-align: center;
         width: 100%;

@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client'
 
 const socket = io(
-  process.env.NODE_ENV === 'development'
+  import.meta.env.DEV
     ? 'http://localhost:5000'
     : 'https://blabber-application.herokuapp.com/',
   { transports: ['websocket'] }

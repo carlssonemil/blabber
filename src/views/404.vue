@@ -13,6 +13,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:math';
 .error {
   padding-top: 15vh;
   text-align: center;
@@ -23,7 +24,7 @@ export default {
     font-size: 125px;
     letter-spacing: $size;
     position: relative;
-    text-shadow: $size / 2 $size / 2 0 white;
+    text-shadow: math.div($size, 2) math.div($size, 2) 0 white;
 
     &:after {
       animation: shad-anim 15s linear infinite;

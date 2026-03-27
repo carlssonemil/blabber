@@ -10,42 +10,42 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import(/* webpackChunkName: "404" */ '../views/404.vue')
+    component: () => import('../views/404.vue')
   },
   {
     path: '/chat',
     name: 'Chat',
-    component: () => import(/* webpackChunkName: "chat" */ '../views/Chat.vue')
+    component: () => import('../views/Chat.vue')
   },
   {
     path: '/join/:room',
     name: 'Join',
-    component: () => import(/* webpackChunkName: "join" */ '../views/Join.vue')
+    component: () => import('../views/Join.vue')
   },
   {
     path: '/about',
     name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import('../views/About.vue')
   },
   {
     path: '/support',
     name: 'Support',
-    component: () => import(/* webpackChunkName: "support" */ '../views/Support.vue')
+    component: () => import('../views/Support.vue')
   },
   {
     path: '/privacy',
     name: 'Privacy',
-    component: () => import(/* webpackChunkName: "privacy" */ '../views/Privacy.vue')
+    component: () => import('../views/Privacy.vue')
   },
   {
     path: '/terms',
     name: 'Terms',
-    component: () => import(/* webpackChunkName: "terms" */ '../views/Terms.vue')
+    component: () => import('../views/Terms.vue')
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 

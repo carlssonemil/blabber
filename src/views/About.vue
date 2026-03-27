@@ -59,6 +59,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:color';
 .features {
   display: grid;
   grid-gap: 25px;
@@ -80,7 +81,7 @@ export default {
     transition: .25s ease;
 
     &:hover {
-      background-color: darken(white, 4%);
+      background-color: color.adjust(white, $lightness: -4%);
 
       svg {
         opacity: .75;

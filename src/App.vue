@@ -78,8 +78,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import '@/scss/main';
+@use '@/scss/main';
 
 .input-container {
   margin: 5px 0;

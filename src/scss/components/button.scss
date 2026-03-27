@@ -1,3 +1,5 @@
+@use '../abstracts/mixins' as *;
+
 button, .button {
   align-items: center;
   background: black;

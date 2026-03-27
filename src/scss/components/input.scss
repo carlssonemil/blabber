@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 input {
   background: #f0eeea;
   border: none;
@@ -10,7 +12,7 @@ input {
   width: 100%;
 
   &:focus {
-    box-shadow: 0 0 0 2px darken(#f0eeea, 5%);
+    box-shadow: 0 0 0 2px color.adjust(#f0eeea, $lightness: -5%);
   }
 
   &:disabled {

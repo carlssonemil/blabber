@@ -120,11 +120,10 @@ import Users from '@/components/Users.vue'
 import Messages from '@/components/Messages.vue'
 import Loader from '@/components/Loader.vue'
 import { Users as UsersIcon, UserPlus, User, MessageSquare, X, Paperclip, Send, AlertCircle, LogOut } from 'lucide-vue-next'
-
-const { handleUrls, containsUrls } = require('@/utils/urls');
-const { upload } = require('@/utils/upload');
-const { getVideoDimensions } = require('@/utils/video');
-const { emojify } = require('@/utils/emoji');
+import { handleUrls, containsUrls } from '@/utils/urls'
+import { upload } from '@/utils/upload'
+import { getVideoDimensions } from '@/utils/video'
+import { emojify } from '@/utils/emoji'
 
 export default {
   name: 'Chat',
@@ -161,7 +160,7 @@ export default {
 
   computed: {
     version() {
-      return require('../../package.json').version;
+      return __APP_VERSION__
     }
   },
 
@@ -327,6 +326,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:color';
+
 .chat {
   display: flex;
   height: 100%;
@@ -598,7 +599,7 @@ export default {
         }
 
         &:hover {
-          background: lighten(#ee5253, 5%);
+          background: color.adjust(#ee5253, $lightness: 5%);
         }
 
         svg {
