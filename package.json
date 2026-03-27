@@ -5,7 +5,7 @@
   "author": "Emil Carlsson",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently --kill-others \"vite\" \"nodemon api/index.js\"",
+    "dev": "concurrently --kill-others \"vite\" \"nodemon --exec 'node --no-deprecation' api/index.js\"",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src/"
@@ -19,7 +19,7 @@
     "express": "^4.21.0",
     "lucide-vue-next": "^0.462.0",
     "moment": "^2.30.0",
-    "oembed": "^0.1.2",
+    "oembed-parser": "^3.1.6-rc1",
     "pinia": "^2.1.0",
     "socket.io": "^4.8.0",
     "socket.io-client": "^4.8.0",

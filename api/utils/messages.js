@@ -1,4 +1,4 @@
-const oembed = require('oembed');
+const { extract } = require('oembed-parser');
 const { wrapURLs, containsUrls, extractUrls } = require('./urls');
 
 async function formatMessage(user, message, attachment) {
@@ -36,15 +36,11 @@ async function formatMessage(user, message, attachment) {
 }
 
 async function embed(url) {
-  return new Promise(resolve => {
-    oembed.fetch(url, {}, (error, response) => {
-      if (error) {
-        return resolve(null);
-      }
-  
-      return resolve(response);
-    });
-  });
+  try {
+    return await extract(url);
+  } catch {
+    return null;
+  }
 }
 
 function formatNotice(message) {
