@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: blabber-api
+    runtime: node
+    plan: free
+    buildCommand: npm install --production
+    startCommand: node api/index.js
+    envVars:
+      - key: CLIENT_ORIGIN
+        value: https://blabber.emca.app
+      - key: NODE_ENV
+        value: production

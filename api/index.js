@@ -2,21 +2,47 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
+const multer = require('multer');
+const FormData = require('form-data');
 const { formatMessage, formatNotice } = require('./utils/messages');
-const { 
-  userJoin, 
-  getCurrentUser, 
-  userLeave, 
-  getRoomUsers 
+const {
+  userJoin,
+  getCurrentUser,
+  userLeave,
+  getRoomUsers
 } = require('./utils/users');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server, {
+  cors: {
+    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    methods: ['GET', 'POST']
+  }
+});
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Upload proxy — forwards files to uguu.se server-side to avoid CORS issues
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
+app.post('/upload', upload.single('file'), async (req, res) => {
+  try {
+    const form = new FormData();
+    form.append('file', req.file.buffer, { filename: req.file.originalname, contentType: req.file.mimetype });
+
+    const response = await fetch('https://uguu.se/upload', {
+      method: 'POST',
+      body: form,
+      headers: form.getHeaders()
+    });
+    const data = await response.text();
+    res.send(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Upload failed' });
+  }
+});
 
 // Run when client connects
 io.on('connection', async socket => {

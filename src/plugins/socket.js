@@ -1,10 +1,8 @@
 import { io } from 'socket.io-client'
 
 const socket = io(
-  import.meta.env.DEV
-    ? 'http://localhost:5000'
-    : 'https://blabber-application.herokuapp.com/',
-  { transports: ['websocket'] }
+  import.meta.env.VITE_API_URL || 'http://localhost:5000',
+  { transports: ['polling', 'websocket'] }
 )
 
 export const socketPlugin = {

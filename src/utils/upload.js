@@ -1,15 +1,13 @@
 import axios from 'axios'
 
-const proxyURL = 'https://cors-anywhere.herokuapp.com/';
-const uploadURL = 'https://uguu.se/api.php?d=upload-tool';
+const uploadURL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/upload';
 
 async function upload(attachment) {
   let formData = new FormData();
   formData.append('file', attachment);
 
-  return await axios.post(proxyURL + uploadURL, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      crossdomain: true
+  return await axios.post(uploadURL, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
     })
     .then(response => {
       return {
