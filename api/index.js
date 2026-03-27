@@ -37,8 +37,8 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       body: form,
       headers: form.getHeaders()
     });
-    const data = await response.text();
-    res.send(data);
+    const data = await response.json();
+    res.send(data.files[0].url);
   } catch (err) {
     res.status(500).json({ error: 'Upload failed' });
   }
