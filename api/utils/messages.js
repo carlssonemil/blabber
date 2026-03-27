@@ -1,16 +1,16 @@
 const { extract } = require('oembed-parser');
 const { wrapURLs, containsUrls, extractUrls } = require('./urls');
 
-async function formatMessage(user, message, attachment) {
+async function formatMessage(user, message, attachments) {
   let messages = [];
 
   // Create default message
   messages.push({
     user,
     message: {
-      attachment: attachment || null,
+      attachments: attachments || [],
       content: containsUrls(message) ? wrapURLs(message) : message,
-      type: attachment && !message ? 'attachment' : 'message' 
+      type: attachments?.length && !message ? 'attachment' : 'message'
     },
     timestamp: new Date()
   });

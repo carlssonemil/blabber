@@ -43,22 +43,23 @@
       </div>
 
       <div class="content attachment"
-          v-if="message.message.attachment"
-          :data-type="message.message.attachment.type"
+          v-for="(attachment, i) in message.message.attachments"
+          :key="i"
+          :data-type="attachment.type"
           :style="{
-            paddingBottom: message.message.attachment.type.startsWith('video') ? (message.message.attachment.height / message.message.attachment.width) * 100 + '%' : null,
-            width: message.message.attachment.type.startsWith('video') ? '100%' : 'auto'
+            paddingBottom: attachment.type.startsWith('video') ? (attachment.height / attachment.width) * 100 + '%' : null,
+            width: attachment.type.startsWith('video') ? '100%' : 'auto'
           }">
 
-        <img v-if="message.message.attachment.type.startsWith('image')" :src="message.message.attachment.url">
+        <img v-if="attachment.type.startsWith('image')" :src="attachment.url">
 
-        <audio v-else-if="message.message.attachment.type.startsWith('audio')" controls>
-          <source :src="message.message.attachment.url" :type="message.message.attachment.type">
+        <audio v-else-if="attachment.type.startsWith('audio')" controls>
+          <source :src="attachment.url" :type="attachment.type">
           Your browser does not support the audio tag.
         </audio>
 
-        <iframe v-else-if="message.message.attachment.type.startsWith('video')"
-            :src="message.message.attachment.url"
+        <iframe v-else-if="attachment.type.startsWith('video')"
+            :src="attachment.url"
             allowfullscreen
             allowtransparency
             allow="autoplay"
@@ -66,7 +67,7 @@
 
         <div v-else>
           <Paperclip :color="message.user.id === socketId ? 'white' : 'black'" :size="14" />
-          <a :href="message.message.attachment.url" target="_blank">{{ message.message.attachment.name }}</a>
+          <a :href="attachment.url" target="_blank">{{ attachment.name }}</a>
         </div>
       </div>
 

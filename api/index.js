@@ -3,7 +3,6 @@ const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
 const multer = require('multer');
-const FormData = require('form-data');
 const { formatMessage, formatNotice } = require('./utils/messages');
 const {
   userJoin,
@@ -16,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+    origin: process.env.CLIENT_ORIGIN || /^http:\/\/localhost(:\d+)?$/,
     methods: ['GET', 'POST']
   }
 });
@@ -27,18 +26,19 @@ app.use(express.json());
 
 // Upload proxy — forwards files to uguu.se server-side to avoid CORS issues
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
-app.post('/upload', upload.single('file'), async (req, res) => {
+app.post('/upload', upload.array('files[]', 10), async (req, res) => {
   try {
     const form = new FormData();
-    form.append('file', req.file.buffer, { filename: req.file.originalname, contentType: req.file.mimetype });
+    req.files.forEach(file => {
+      form.append('files[]', new Blob([file.buffer], { type: file.mimetype }), file.originalname);
+    });
 
     const response = await fetch('https://uguu.se/upload', {
       method: 'POST',
-      body: form,
-      headers: form.getHeaders()
+      body: form
     });
     const data = await response.json();
-    res.send(data.files[0].url);
+    res.json(data.files.map(f => f.url));
   } catch (err) {
     res.status(500).json({ error: 'Upload failed' });
   }
@@ -65,11 +65,11 @@ io.on('connection', async socket => {
   });
 
   // Listen for message
-  socket.on('message', async ({ message, attachment }) => {
+  socket.on('message', async ({ message, attachments }) => {
     const user = getCurrentUser(socket.id);
 
     if (user) {
-      let messages = await formatMessage(user, message, attachment);
+      let messages = await formatMessage(user, message, attachments);
       messages.forEach(formattedMessage => {
         io.to(user.room).emit(
           'messageChannel', 

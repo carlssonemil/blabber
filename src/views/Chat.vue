@@ -90,9 +90,11 @@
                   @keyup.enter="send()"
                   :disabled="uploading"
                   ref="messageInput">
-          <div class="attached-file" :class="{ disabled: uploading }" v-if="attachment" ref="attachedFile">
-            <span :content="attachment.name" v-tippy>{{ attachment.name }}</span>
-            <X color="white" @click="removeAttachment()" />
+          <div class="attached-files" v-if="attachments.length" ref="attachedFiles">
+            <div class="attached-file" :class="{ disabled: uploading }" v-for="(file, i) in attachments" :key="i">
+              <span :content="file.name" v-tippy>{{ file.name }}</span>
+              <X color="white" @click="removeAttachment(i)" />
+            </div>
           </div>
         </div>
         <label for="attachment-input" class="button icon" :class="{ disabled: uploading }" content="Attach file" v-tippy>
@@ -109,7 +111,7 @@
         </div>
       </div>
 
-      <input type="file" id="attachment-input" ref="attachmentInput" @change="attachFile($event.target.files[0])">
+      <input type="file" id="attachment-input" ref="attachmentInput" multiple @change="attachFile($event.target.files)">
     </div>
   </div>
 </template>
@@ -152,7 +154,7 @@ export default {
       messages: [],
       connected: false,
       message: '',
-      attachment: null,
+      attachments: [],
       uploading: false,
       uploadError: false
     }
@@ -166,15 +168,15 @@ export default {
 
   methods: {
     async send() {
-      if ((this.message || this.attachment) && !this.uploading) {
+      if ((this.message || this.attachments.length) && !this.uploading) {
         let message = {
           message: this.message
         };
 
-        if (this.attachment) {
+        if (this.attachments.length) {
           this.uploading = true;
 
-          let response = await upload(this.attachment);
+          let response = await upload(this.attachments);
 
           if (response.isAxiosError) {
             if (this.message) {
@@ -195,14 +197,16 @@ export default {
             }
           } else {
             this.uploadError = false;
-            message.attachment = response;
 
-            if (message.attachment.type.startsWith('video')) {
-              let { height, width } = await getVideoDimensions(response.url);
-
-              message.attachment.height = height;
-              message.attachment.width = width;
+            for (let attachment of response) {
+              if (attachment.type.startsWith('video')) {
+                let { height, width } = await getVideoDimensions(attachment.url);
+                attachment.height = height;
+                attachment.width = width;
+              }
             }
+
+            message.attachments = response;
           }
         }
 
@@ -253,18 +257,25 @@ export default {
       }
     },
 
-    attachFile(file) {
-      this.attachment = file;
+    attachFile(files) {
+      this.attachments.push(...files);
 
       this.$nextTick(() => {
-        this.$refs.messageInput.style.paddingRight = this.$refs.attachedFile.offsetWidth + 20 + 'px';
+        this.$refs.messageInput.style.paddingRight = this.$refs.attachedFiles.offsetWidth + 20 + 'px';
       });
     },
 
-    removeAttachment() {
-      this.attachment = null;
-      this.$refs.messageInput.style.paddingRight = null;
-      this.$refs.attachmentInput.value = null;
+    removeAttachment(index) {
+      this.attachments.splice(index, 1);
+
+      if (this.attachments.length) {
+        this.$nextTick(() => {
+          this.$refs.messageInput.style.paddingRight = this.$refs.attachedFiles.offsetWidth + 20 + 'px';
+        });
+      } else {
+        this.$refs.messageInput.style.paddingRight = null;
+        this.$refs.attachmentInput.value = null;
+      }
     },
 
     async handleMessage(message) {
@@ -537,20 +548,29 @@ export default {
         position: relative;
         width: 100%;
 
+        .attached-files {
+          align-items: center;
+          display: flex;
+          gap: 6px;
+          max-width: 60%;
+          overflow: hidden;
+          position: absolute;
+          right: 7px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
         .attached-file {
           align-items: center;
           background: black;
           border-radius: 100px;
           color: white;
           display: flex;
+          flex-shrink: 0;
           font-size: 14px;
-          max-width: 40%;
+          max-width: 120px;
           overflow: hidden;
           padding: 5px 8px;
-          position: absolute;
-          right: 7px;
-          top: 50%;
-          transform: translateY(-50%);
 
           &.disabled {
             opacity: .5;
@@ -561,10 +581,12 @@ export default {
             overflow: hidden;
             padding: 4px;
             text-overflow: ellipsis;
+            white-space: nowrap;
           }
 
           svg {
             cursor: pointer;
+            flex-shrink: 0;
             position: relative;
             top: 1px;
           }
